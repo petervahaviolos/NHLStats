@@ -23,6 +23,7 @@ Make sure your android devices is at least on API 16 if attempting to install th
 * [Android Studio](https://developer.android.com/studio/) - IDE Used for Android Development
 * [Volley](https://github.com/google/volley) - Making HTTP requests in Android
 * [AndroidSVGLoader](https://github.com/ar-android/AndroidSvgLoader) - Used to download and convert svg files for use in Android
+* [Picasso](https://square.github.io/picasso/) - Image downloading and caching library for Android
 
 ## Authors
 
