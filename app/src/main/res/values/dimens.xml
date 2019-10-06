@@ -1,0 +1,7 @@
+<resources>
+    <dimen name="fab_margin">16dp</dimen>
+    <dimen name="left_margin">20dp</dimen>
+    <dimen name="top_margin">50dp</dimen>
+    <dimen name="heading_one">20sp</dimen>
+    <dimen name="description_size">14sp</dimen>
+</resources>
