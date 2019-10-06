@@ -1,12 +1,9 @@
 package com.example.myfirstapp
 
-import android.media.Image
-import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.util.Log
 import com.ahmadrosid.svgloader.SvgLoader
 import com.android.volley.Request
 import com.android.volley.RequestQueue
@@ -31,41 +28,21 @@ class TeamStatsActivity : AppCompatActivity() {
 
         val teamId: Int = intent.getIntExtra("teamId", 0)
         players = mutableListOf()
+        downloadTeamInfo(teamId)
+        //downloadTeamLogo(teamId)
 
-        requestStats(teamId)
-        getTeamRoster(teamId)
-        downloadTeamLogo(teamId)
-
-        recyclerViewTeamRoster.apply {
-            layoutManager = LinearLayoutManager(this@TeamStatsActivity)
-            adapter = PlayerAdapter(players)
-        }
     }
 
-    private fun requestStats(teamId: Int) {
-        val url = "https://statsapi.web.nhl.com/api/v1/teams/${teamId}"
-        val team = JsonObjectRequest(Request.Method.GET, url, null,
-            Response.Listener { response ->
-                val teamData = response.getJSONArray("teams")
-                val teamInfo = teamData.getJSONObject(teamData.length() - 1)
-                val teamName = teamInfo.getString("name")
-                textViewTeamName.append(teamName)
-            },
-            Response.ErrorListener { error ->
-                error.printStackTrace()
-            }
-        )
-        requestQueue.add(team)
-    }
-
-    private fun getTeamRoster(teamId: Int){
+    private fun downloadTeamInfo(teamId: Int) {
         val url = "https://statsapi.web.nhl.com/api/v1/teams/${teamId}/?expand=team.roster"
         val team = JsonObjectRequest(Request.Method.GET, url, null,
             Response.Listener { response ->
                 val teamData = response.getJSONArray("teams")
-                val teamInfo = teamData.getJSONObject(teamData.length() - 1).getJSONObject("roster")
-                val teamRoster = teamInfo.getJSONArray("roster")
-                for (i in 0..teamRoster.length()-1){
+                val teamInfo = teamData.getJSONObject(teamData.length() - 1)
+
+                val teamRoster = teamInfo.getJSONObject("roster").getJSONArray("roster")
+                for (i in 0 until teamRoster.length() - 1) {
+                    Log.d("downloadTeamInfo", "Downloading info for player $i")
                     val playerInfo = teamRoster.getJSONObject(i).getJSONObject("person")
                     val playerPositionInfo = teamRoster.getJSONObject(i).getJSONObject("position")
 
@@ -76,12 +53,21 @@ class TeamStatsActivity : AppCompatActivity() {
 
                     players.add(Player(playerId, playerName, playerPosition, playerPicture))
                 }
+                Log.d("downloadTeamInfo", "${players.count()} players downloaded. ")
+                Log.d("downloadTeamInfo", "${players.get(0).name}")
+
+                recyclerViewTeamRoster.apply {
+                    Log.d("TeamStatsActivity", "${players.size} - length of player array")
+                    layoutManager = linearLayoutManager
+                    adapter = PlayerAdapter(players)
+                }
             },
             Response.ErrorListener { error ->
                 error.printStackTrace()
             }
         )
         requestQueue.add(team)
+
     }
 
     private fun downloadTeamLogo(teamId: Int) {
@@ -93,8 +79,8 @@ class TeamStatsActivity : AppCompatActivity() {
             .load(url, imageViewTeamLogo)
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        SvgLoader.pluck().close()
-    }
+//    override fun onDestroy() {
+//        super.onDestroy()
+//        SvgLoader.pluck().close()
+//    }
 }
