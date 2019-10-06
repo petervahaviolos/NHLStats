@@ -10,9 +10,9 @@ should compile and you may run it on your own Android phone or emulator.
 
 ### Prerequisites
 
-Android Studio: https://developer.android.com/studio
-Android SDK: Included with Android Studio
-Google USB Driver (for windows if using a Google device: https://developer.android.com/studio/run/win-usb
+* Android Studio: https://developer.android.com/studio
+* Android SDK: Included with Android Studio
+* Google USB Driver (for windows if using a Google device: https://developer.android.com/studio/run/win-usb
 
 ## Deployment
 
